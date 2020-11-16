@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Facts App</string>
+    <string name="error_no_internet">Internet connection not available!</string>
 </resources>
