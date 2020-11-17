@@ -3,13 +3,15 @@ package com.wipro.factsapp.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.wipro.factsapp.FactsListPresenter
 import com.wipro.factsapp.R
 import com.wipro.factsapp.model.Fact
 
 /**
  * Adapter for FactsList
  */
-class FactsAdapter : RecyclerView.Adapter<FactViewHolder>() {
+class FactsAdapter(private val presenter: FactsListPresenter) :
+    RecyclerView.Adapter<FactViewHolder>() {
 
     private val factsList = ArrayList<Fact>()
 
@@ -33,6 +35,6 @@ class FactsAdapter : RecyclerView.Adapter<FactViewHolder>() {
     override fun getItemCount() = factsList.size
 
     override fun onBindViewHolder(holder: FactViewHolder, position: Int) {
-        holder.setFactData(factsList[position])
+        presenter.loadFactData(holder, factsList[position])
     }
 }

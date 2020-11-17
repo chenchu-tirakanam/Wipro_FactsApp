@@ -33,11 +33,12 @@ class FactsListActivity : AppCompatActivity(), FactsListView, SwipeRefreshLayout
         errorText = findViewById(R.id.error_message)
 
         factsListView.layoutManager = LinearLayoutManager(this)
-        adapter = FactsAdapter()
-        factsListView.adapter = adapter
 
         presenter = FactsListPresenterImpl(this)
         swipeLayout.setOnRefreshListener(this)
+
+        adapter = FactsAdapter(presenter)
+        factsListView.adapter = adapter
 
         swipeLayout.isRefreshing = true
         presenter.loadFacts(this)

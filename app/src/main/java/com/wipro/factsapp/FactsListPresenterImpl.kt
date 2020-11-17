@@ -1,7 +1,11 @@
 package com.wipro.factsapp
 
 import android.content.Context
+import android.text.TextUtils
+import android.view.View
 import androidx.annotation.StringRes
+import com.bumptech.glide.Glide
+import com.wipro.factsapp.adapter.FactViewHolder
 import com.wipro.factsapp.api.ApiManager
 import com.wipro.factsapp.model.Fact
 import com.wipro.factsapp.model.FactsResponse
@@ -24,6 +28,35 @@ class FactsListPresenterImpl(private val view: FactsListView) : FactsListPresent
         } else {
             showError(R.string.error_no_internet)
         }
+    }
+
+    override fun loadFactData(viewHolder: FactViewHolder, fact: Fact) {
+        with(viewHolder) {
+            if (TextUtils.isEmpty(fact.title)) {
+                titleView.visibility = View.GONE
+            } else {
+                titleView.visibility = View.VISIBLE
+                titleView.text = fact.title
+            }
+
+            if (TextUtils.isEmpty(fact.description)) {
+                descView.visibility = View.GONE
+            } else {
+                descView.visibility = View.VISIBLE
+                descView.text = fact.description
+            }
+
+            if (fact.imageHref == null) {
+                factImage.visibility = View.GONE
+            } else {
+                factImage.visibility = View.VISIBLE
+                Glide.with(factImage.context).load(fact.imageHref)
+                    .error(R.drawable.placeholder)
+                    .placeholder(R.drawable.placeholder)
+                    .into(factImage)
+            }
+        }
+
     }
 
     private fun showError(@StringRes error: Int) {

@@ -9,7 +9,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:divider="@drawable/space"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:showDividers="middle">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -38,8 +41,7 @@
         <ImageView
             android:id="@+id/fact_image"
             android:layout_width="@dimen/image_width"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/image_margin" />
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>
