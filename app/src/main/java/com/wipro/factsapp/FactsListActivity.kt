@@ -6,6 +6,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.wipro.factsapp.model.Fact
 
 /**
  * Activity to show facts list
@@ -41,6 +42,15 @@ class FactsListActivity : AppCompatActivity(), FactsListView, SwipeRefreshLayout
         errorText.setText(error)
         errorText.visibility = View.VISIBLE
         factsList.visibility = View.GONE
+        swipeLayout.isRefreshing = false
+    }
+
+    override fun setActionbarTitle(title: String) {
+        swipeLayout.isRefreshing = false
+        setTitle(title)
+    }
+
+    override fun showList(factsList: List<Fact>) {
         swipeLayout.isRefreshing = false
     }
 }
