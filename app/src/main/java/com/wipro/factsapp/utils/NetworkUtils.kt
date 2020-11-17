@@ -23,7 +23,7 @@ object NetworkUtils {
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val networks = connectivityManager.allNetworks
+            val networks = connectivityManager.allNetworks ?: return false
             for (network in networks) {
                 val nc = connectivityManager.getNetworkCapabilities(network) ?: continue
 

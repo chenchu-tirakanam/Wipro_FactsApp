@@ -2,8 +2,6 @@ package com.wipro.factsapp
 
 import android.content.Context
 import android.os.Bundle
-import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import androidx.annotation.StringRes
 import com.bumptech.glide.Glide
@@ -23,8 +21,8 @@ import retrofit2.Response
 class FactsListPresenterImpl(private val view: FactsListView) : FactsListPresenter {
 
     companion object {
-        private const val RESPONSE_JSON = "RESPONSE_JSON"
-        private const val ERROR_STRING = "ERROR_STRING"
+        const val RESPONSE_JSON = "RESPONSE_JSON"
+        const val ERROR_STRING = "ERROR_STRING"
     }
 
     private var title: String? = null
@@ -49,7 +47,6 @@ class FactsListPresenterImpl(private val view: FactsListView) : FactsListPresent
 
     override fun loadFacts(context: Context) {
         if (NetworkUtils.isNetworkConnected(context)) {
-            Log.e("Error", "Loading API")
             loadFactsFromApi()
         } else {
             showError(R.string.error_no_internet)
@@ -58,14 +55,14 @@ class FactsListPresenterImpl(private val view: FactsListView) : FactsListPresent
 
     override fun loadFactData(viewHolder: FactViewHolder, fact: Fact) {
         with(viewHolder) {
-            if (TextUtils.isEmpty(fact.title)) {
+            if (isEmpty(fact.title)) {
                 titleView.visibility = View.GONE
             } else {
                 titleView.visibility = View.VISIBLE
                 titleView.text = fact.title
             }
 
-            if (TextUtils.isEmpty(fact.description)) {
+            if (isEmpty(fact.description)) {
                 descView.visibility = View.GONE
             } else {
                 descView.visibility = View.VISIBLE
@@ -83,6 +80,10 @@ class FactsListPresenterImpl(private val view: FactsListView) : FactsListPresent
             }
         }
 
+    }
+
+    private fun isEmpty(text: String?): Boolean {
+        return text == null || text.isEmpty()
     }
 
     override fun saveState(outState: Bundle) {
