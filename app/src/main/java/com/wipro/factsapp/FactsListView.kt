@@ -9,6 +9,11 @@ import com.wipro.factsapp.model.Fact
 interface FactsListView {
 
     /**
+     * Shows loading for SwipeLayout
+     */
+    fun showLoading()
+
+    /**
      * Shows error message
      *
      * @param error String resource id representing the error

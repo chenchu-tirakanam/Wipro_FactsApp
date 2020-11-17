@@ -40,12 +40,20 @@ class FactsListActivity : AppCompatActivity(), FactsListView, SwipeRefreshLayout
         adapter = FactsAdapter(presenter)
         factsListView.adapter = adapter
 
-        swipeLayout.isRefreshing = true
-        presenter.loadFacts(this)
+        presenter.restoreState(savedInstanceState, this)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        presenter.saveState(outState)
+        super.onSaveInstanceState(outState)
     }
 
     override fun onRefresh() {
         presenter.loadFacts(this)
+    }
+
+    override fun showLoading() {
+        swipeLayout.isRefreshing = true
     }
 
     override fun showError(error: Int) {

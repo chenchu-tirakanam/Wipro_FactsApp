@@ -11,9 +11,9 @@ class FactsResponse {
 
     @SerializedName("title")
     @Expose
-    val title: String? = null
+    var title: String? = null
 
     @SerializedName("rows")
     @Expose
-    val list: List<Fact>? = null
+    var list: List<Fact>? = null
 }
