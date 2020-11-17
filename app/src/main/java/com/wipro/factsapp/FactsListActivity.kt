@@ -4,8 +4,11 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.snackbar.Snackbar
+import com.wipro.factsapp.adapter.FactsAdapter
 import com.wipro.factsapp.model.Fact
 
 /**
@@ -14,8 +17,10 @@ import com.wipro.factsapp.model.Fact
 class FactsListActivity : AppCompatActivity(), FactsListView, SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var swipeLayout: SwipeRefreshLayout
-    private lateinit var factsList:RecyclerView
+    private lateinit var factsListView:RecyclerView
     private lateinit var errorText:TextView
+
+    private lateinit var adapter:FactsAdapter
 
     private lateinit var presenter: FactsListPresenter
 
@@ -24,8 +29,12 @@ class FactsListActivity : AppCompatActivity(), FactsListView, SwipeRefreshLayout
         setContentView(R.layout.activity_facts_list)
 
         swipeLayout = findViewById(R.id.swipe_layout)
-        factsList = findViewById(R.id.facts_list)
+        factsListView = findViewById(R.id.facts_list)
         errorText = findViewById(R.id.error_message)
+
+        factsListView.layoutManager = LinearLayoutManager(this)
+        adapter = FactsAdapter()
+        factsListView.adapter = adapter
 
         presenter = FactsListPresenterImpl(this)
         swipeLayout.setOnRefreshListener(this)
@@ -41,8 +50,13 @@ class FactsListActivity : AppCompatActivity(), FactsListView, SwipeRefreshLayout
     override fun showError(error: Int) {
         errorText.setText(error)
         errorText.visibility = View.VISIBLE
-        factsList.visibility = View.GONE
+        factsListView.visibility = View.GONE
         swipeLayout.isRefreshing = false
+    }
+
+    override fun showErrorToast(error: Int) {
+        swipeLayout.isRefreshing = false
+        Snackbar.make(swipeLayout, error, Snackbar.LENGTH_SHORT).show()
     }
 
     override fun setActionbarTitle(title: String) {
@@ -51,6 +65,9 @@ class FactsListActivity : AppCompatActivity(), FactsListView, SwipeRefreshLayout
     }
 
     override fun showList(factsList: List<Fact>) {
+        errorText.visibility = View.GONE
+        factsListView.visibility = View.VISIBLE
         swipeLayout.isRefreshing = false
+        adapter.setFactsList(factsList)
     }
 }

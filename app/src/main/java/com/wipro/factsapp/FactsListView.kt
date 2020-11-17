@@ -16,6 +16,13 @@ interface FactsListView {
     fun showError(@StringRes error: Int)
 
     /**
+     * Shows error message in Toast
+     *
+     * @param error String resource id representing the error
+     */
+    fun showErrorToast(@StringRes error: Int)
+
+    /**
      * Sets Title in the actionbar
      *
      * @param title Title

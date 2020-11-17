@@ -1,6 +1,7 @@
 package com.wipro.factsapp
 
 import android.content.Context
+import androidx.annotation.StringRes
 import com.wipro.factsapp.api.ApiManager
 import com.wipro.factsapp.model.Fact
 import com.wipro.factsapp.model.FactsResponse
@@ -14,13 +15,22 @@ import retrofit2.Response
  */
 class FactsListPresenterImpl(private val view: FactsListView) : FactsListPresenter {
 
-    private var factsResponse: FactsResponse? = null
+    private var title: String? = null
+    private var list: List<Fact>? = null
 
     override fun loadFacts(context: Context) {
         if (NetworkUtils.isNetworkConnected(context)) {
             loadFactsFromApi()
         } else {
-            view.showError(R.string.error_no_internet)
+            showError(R.string.error_no_internet)
+        }
+    }
+
+    private fun showError(@StringRes error: Int) {
+        if (list == null || list!!.isEmpty()) {
+            view.showError(error)
+        } else {
+            view.showErrorToast(error)
         }
     }
 
@@ -30,7 +40,7 @@ class FactsListPresenterImpl(private val view: FactsListView) : FactsListPresent
     private fun loadFactsFromApi() {
         ApiManager.getFacts().enqueue(object : Callback<FactsResponse> {
             override fun onFailure(call: Call<FactsResponse>?, t: Throwable?) {
-                view.showError(R.string.error_api)
+                showError(R.string.error_api)
             }
 
             override fun onResponse(call: Call<FactsResponse>?,
@@ -40,7 +50,7 @@ class FactsListPresenterImpl(private val view: FactsListView) : FactsListPresent
                     if (response.isSuccessful) {
                         onSuccess(response.body())
                     }
-                } ?: view.showError(R.string.error_api)
+                } ?: showError(R.string.error_api)
 
             }
         })
@@ -52,9 +62,20 @@ class FactsListPresenterImpl(private val view: FactsListView) : FactsListPresent
      * @param factsResponse API response
      */
     private fun onSuccess(factsResponse: FactsResponse) {
-        this.factsResponse = factsResponse
-        factsResponse.title?.run { view.setActionbarTitle(this) }
-        showList(factsResponse.list)
+        factsResponse.title?.run { setTitle(this) }
+        if (factsResponse.list != null) {
+            val list = factsResponse.list.filter { it.isValid() }
+            showList(list)
+        } else {
+            showError(R.string.error_empty_list)
+        }
+    }
+
+    private fun setTitle(title: String?) {
+        if (title != null) {
+            this.title = title
+            view.setActionbarTitle(title)
+        }
     }
 
     /**
@@ -62,11 +83,12 @@ class FactsListPresenterImpl(private val view: FactsListView) : FactsListPresent
      *
      * @param factsList List data
      */
-    private fun showList(factsList: List<Fact>?) {
-        if (factsList != null && factsList.isNotEmpty()) {
+    private fun showList(factsList: List<Fact>) {
+        if (factsList.isNotEmpty()) {
+            list = factsList
             view.showList(factsList)
         } else {
-            view.showError(R.string.error_empty_list)
+            showError(R.string.error_empty_list)
         }
     }
 }
